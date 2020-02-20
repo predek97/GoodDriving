@@ -1,19 +1,18 @@
 package com.example.gooddriving
 
-import android.content.Intent
+
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
 
-class MainActivity : BasicLayoutActivity() {
+class DashboardActivity : BasicLayoutActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_dashboard)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         textMessage = findViewById(R.id.message)
+        navView.selectedItemId = R.id.navigation_dashboard
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 }
