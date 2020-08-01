@@ -6,4 +6,10 @@
     <string name="title_activity_trips">TripsActivity</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
+    <string name="trip_one_info">Trip 1 - information</string>
+    <string name="trip_two_info">Trip 2 - information</string>
+    <string name="trip_three_info">Trip 3 - information</string>
+    <string name="trip_four_info">Trip 4 - information</string>
+    <string name="trip_five_info">Trip 5 - information</string>
+    <string name="trip_six_info">Trip 6 - information</string>
 </resources>
