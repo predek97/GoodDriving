@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding">16dp</dimen>
+    <dimen name="trip_margin">20dp</dimen>
+    <dimen name="trip_button_font_size">10sp</dimen>
 </resources>

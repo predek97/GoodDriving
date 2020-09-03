@@ -12,4 +12,6 @@
     <string name="trip_four_info">Trip 4 - information</string>
     <string name="trip_five_info">Trip 5 - information</string>
     <string name="trip_six_info">Trip 6 - information</string>
+    <string name="my_image_description">Car trip info</string>
+    <string name="trip_button_text">Więcej</string>
 </resources>
