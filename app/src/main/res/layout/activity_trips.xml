@@ -66,7 +66,7 @@
                     android:orientation="horizontal">
 
                 <ImageView
-                        android:id="@+id/car_icon"
+                        android:id="@+id/car_icon_1"
                         android:layout_width="wrap_content"
                         android:layout_height="54dp"
                         android:layout_margin="@dimen/trip_margin"
@@ -100,35 +100,127 @@
 
             </LinearLayout>
 
-            <TextView
-                    android:id="@+id/trip2"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/trip_two_info"
-                    android:textAlignment="center"
-                    android:textSize="24sp"
-                    app:fontFamily="@font/roboto" />
 
-            <TextView
-                    android:id="@+id/trip3"
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/trip_three_info"
-                    android:textAlignment="center"
-                    android:textSize="24sp"
-                    app:fontFamily="@font/roboto" />
+                    android:layout_height="90dp"
+                    android:orientation="horizontal">
 
-            <TextView
-                    android:id="@+id/trip4"
+                <ImageView
+                        android:id="@+id/car_icon_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="54dp"
+                        android:layout_margin="@dimen/trip_margin"
+                        android:contentDescription="@string/my_image_description"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/ic_time_to_leave_black_24dp" />
+
+                <TextView
+                        android:id="@+id/trip2_exp"
+                        android:layout_width="146dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="@dimen/trip_margin"
+                        android:layout_weight="1"
+                        android:text="@string/trip_two_info"
+                        android:textSize="14sp"
+                        app:fontFamily="@font/roboto" />
+
+                <Button
+                        android:id="@+id/trip2_button"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="@dimen/trip_margin"
+                        android:layout_marginEnd="@dimen/trip_margin"
+                        android:layout_marginRight="@dimen/trip_margin"
+                        android:layout_marginBottom="@dimen/trip_margin"
+                        android:layout_weight="1"
+                        android:text="@string/trip_button_text"
+                        android:textSize="@dimen/trip_button_font_size" />
+
+            </LinearLayout>
+
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/trip_four_info"
-                    android:textAlignment="center"
-                    android:textSize="24sp"
-                    app:fontFamily="@font/roboto" />
+                    android:layout_height="90dp"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:id="@+id/car_icon_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="54dp"
+                        android:layout_margin="@dimen/trip_margin"
+                        android:contentDescription="@string/my_image_description"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/ic_time_to_leave_black_24dp" />
+
+                <TextView
+                        android:id="@+id/trip3_exp"
+                        android:layout_width="146dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="@dimen/trip_margin"
+                        android:layout_weight="1"
+                        android:text="@string/trip_three_info"
+                        android:textSize="14sp"
+                        app:fontFamily="@font/roboto" />
+
+                <Button
+                        android:id="@+id/trip3_button"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="@dimen/trip_margin"
+                        android:layout_marginEnd="@dimen/trip_margin"
+                        android:layout_marginRight="@dimen/trip_margin"
+                        android:layout_marginBottom="@dimen/trip_margin"
+                        android:layout_weight="1"
+                        android:text="@string/trip_button_text"
+                        android:textSize="@dimen/trip_button_font_size" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:id="@+id/car_icon_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="54dp"
+                        android:layout_margin="@dimen/trip_margin"
+                        android:contentDescription="@string/my_image_description"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/ic_time_to_leave_black_24dp" />
+
+                <TextView
+                        android:id="@+id/trip4_exp"
+                        android:layout_width="146dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="@dimen/trip_margin"
+                        android:layout_weight="1"
+                        android:text="@string/trip_four_info"
+                        android:textSize="14sp"
+                        app:fontFamily="@font/roboto" />
+
+                <Button
+                        android:id="@+id/trip4_button"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="@dimen/trip_margin"
+                        android:layout_marginEnd="@dimen/trip_margin"
+                        android:layout_marginRight="@dimen/trip_margin"
+                        android:layout_marginBottom="@dimen/trip_margin"
+                        android:layout_weight="1"
+                        android:text="@string/trip_button_text"
+                        android:textSize="@dimen/trip_button_font_size" />
+
+            </LinearLayout>
+<!--
 
             <TextView
                     android:id="@+id/trip5"
@@ -149,7 +241,7 @@
                     android:textAlignment="center"
                     android:textSize="24sp"
                     app:fontFamily="@font/roboto" />
-
+-->
         </LinearLayout>
     </ScrollView>
 
