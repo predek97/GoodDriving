@@ -40,11 +40,11 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.apply {
-            val sydney = LatLng(-33.852, 151.211)
+            val sydney = LatLng(54.6, 18.29)
             addMarker(
                 MarkerOptions()
                     .position(sydney)
-                    .title("Marker in Sydney")
+                    .title("Marker in Wejherowo")
             )
         }
     }
