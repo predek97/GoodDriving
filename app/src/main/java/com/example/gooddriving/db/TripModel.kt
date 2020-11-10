@@ -1,4 +1,4 @@
-package com.example.gooddriving
+package com.example.gooddriving.db
 
 class TripModel {
     private var distance: Float = 0.0F
