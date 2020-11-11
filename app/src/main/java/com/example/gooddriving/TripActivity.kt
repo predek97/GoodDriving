@@ -21,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_trip.*
 
-class TripActivity : BasicLayoutActivity(), OnMapReadyCallback, LocationListener {
+class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
 
     companion object {
         const val tripName = "default trip name"
@@ -61,29 +61,10 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback, LocationListener
 
         val locationButton : Button = findViewById(R.id.location_button)
         locationButton.setOnClickListener {
-            val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-
+            var location = Location(LocationManager.GPS_PROVIDER)
+            Toast.makeText(this,"Your current location: " + location.latitude + ", " + location.longitude, Toast.LENGTH_LONG).show()
         }
 
-    }
-
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onProviderEnabled(provider: String?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onProviderDisabled(provider: String?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onLocationChanged(location: Location){
-        val locationButton : Button = findViewById(R.id.location_button)
-        locationButton.text = "new location"
-        Toast.makeText(this,"Your current location: " + location.latitude + ", " + location.longitude, Toast.LENGTH_LONG).show()
     }
 
 
