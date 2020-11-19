@@ -1,9 +1,14 @@
 package com.example.gooddriving
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.companion.CompanionDeviceManager
 import android.content.Intent
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 open class BasicLayoutActivity : AppCompatActivity() {
     protected lateinit var textMessage: TextView
@@ -27,4 +32,5 @@ open class BasicLayoutActivity : AppCompatActivity() {
         }
         false
     }
+
 }
