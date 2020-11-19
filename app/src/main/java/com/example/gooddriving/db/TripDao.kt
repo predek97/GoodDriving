@@ -1,6 +1,7 @@
 package com.example.gooddriving.db
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 
 
@@ -9,4 +10,9 @@ interface TripDao {
     @Query("SELECT * FROM trip_table")
     fun getAllTrips(): List<Trip>
 
+    @Insert
+    fun insertTrip(trip: Trip)
+
+    @Query("DELETE FROM trip_table")
+    fun deleteAll()
 }

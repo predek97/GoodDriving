@@ -245,4 +245,12 @@
         </LinearLayout>
     </ScrollView>
 
+    <TextView
+            android:id="@+id/dbTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            tools:layout_editor_absoluteX="176dp"
+            tools:layout_editor_absoluteY="570dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

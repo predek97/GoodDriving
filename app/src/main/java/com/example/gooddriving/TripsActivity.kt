@@ -1,18 +1,50 @@
 package com.example.gooddriving
 
 import android.content.Intent
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import com.example.gooddriving.db.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class TripsActivity : BasicLayoutActivity() {
+
+    var db: TripRoomDatabase? = null
+    var tripDao : TripDao? = null
+    var positionDao : PositionDao? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trips)
+        db = TripRoomDatabase.getDatabase(this)
+        // code to test db
+        /*
+        var trip = Trip(grade = 8.8)
+        var data: List<Trip>
+        db = TripRoomDatabase.getDatabase(this)
+        tripDao = db?.tripDao()
+        GlobalScope.launch {
+            tripDao?.insertTrip(trip)
+            data = db?.tripDao()!!.getAllTrips()
+
+            data?.forEach {
+                println(it)
+            }
+            val textField: TextView = findViewById(R.id.dbTest)
+            textField.setText(data[0].grade.toString())
+        }
+
+        */
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+
 
         textMessage = findViewById(R.id.message)
         navView.selectedItemId = R.id.navigation_trips
@@ -45,5 +77,25 @@ class TripsActivity : BasicLayoutActivity() {
             val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripName, "Trip four")
             startActivity(intent)
         }
+    }
+
+
+    fun addToDb(){
+        var trip = Trip(grade = 8.9)
+        var pos1 = Position(latitude = 3.5, longitude = 4.5, timestamp = 12345, correspondingTripId = trip.tripId)
+        var pos2 = Position(latitude = 3.5, longitude = 4.8, timestamp = 12346, correspondingTripId = trip.tripId)
+        var data: List<Trip>
+        var posData: List<Position>
+        db = TripRoomDatabase.getDatabase(this)
+        tripDao = db!!.tripDao()
+        positionDao = db!!.positionDao()
+        GlobalScope.launch {
+
+
+        }
+    }
+
+    fun removeFromDb(){
+
     }
 }

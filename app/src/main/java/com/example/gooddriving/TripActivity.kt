@@ -61,7 +61,7 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
 
         val locationButton : Button = findViewById(R.id.location_button)
         locationButton.setOnClickListener {
-            var location = Location(LocationManager.GPS_PROVIDER)
+            var location = Location(GPS_PROVIDER)
             Toast.makeText(this,"Your current location: " + location.latitude + ", " + location.longitude, Toast.LENGTH_LONG).show()
         }
 
