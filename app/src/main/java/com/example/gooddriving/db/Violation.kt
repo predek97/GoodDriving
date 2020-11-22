@@ -21,5 +21,5 @@ data class Violation(
     //var place: Location = Location(LocationManager.GPS_PROVIDER)
 ){
     @PrimaryKey(autoGenerate = true)
-    val violationId: Int = 0
+    var violationId: Int = 0
 }

@@ -8,5 +8,5 @@ data class Trip(
     var grade: Double = 0.0
 ){
     @PrimaryKey(autoGenerate = true)
-    val tripId: Int = 0
+    var tripId: Int = 0
 }
