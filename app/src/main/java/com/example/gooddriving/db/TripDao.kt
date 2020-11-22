@@ -11,7 +11,7 @@ interface TripDao {
     fun getAllTrips(): List<Trip>
 
     @Insert
-    fun insertTrip(trip: Trip)
+    fun insertTrip(trip: Trip): Long
 
     @Query("DELETE FROM trip_table")
     fun deleteAll()
