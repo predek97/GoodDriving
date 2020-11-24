@@ -17,37 +17,22 @@ class TripsActivity : BasicLayoutActivity() {
     var db: TripRoomDatabase? = null
     var tripDao : TripDao? = null
     var positionDao : PositionDao? = null
+    var violationDao: ViolationDao? = null
     var tripWithPosDao : TripWithPositionsDao? = null
+    var tripWithVioDao : TripWithViolationsDao? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trips)
         db = TripRoomDatabase.getDatabase(this)
-        // code to test db
-        /*
-        var trip = Trip(grade = 8.8)
-        var data: List<Trip>
-        db = TripRoomDatabase.getDatabase(this)
-        tripDao = db?.tripDao()
-        GlobalScope.launch {
-            tripDao?.insertTrip(trip)
-            data = db?.tripDao()!!.getAllTrips()
 
-            data?.forEach {
-                println(it)
-            }
-            val textField: TextView = findViewById(R.id.dbTest)
-            textField.setText(data[0].grade.toString())
-        }
-
-        */
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        addToDb()
+        //addToDb() - dane już dodane
         Thread.sleep(2000)
-        removeFromDb()
+        //removeFromDb()
 
         textMessage = findViewById(R.id.message)
         navView.selectedItemId = R.id.navigation_trips
@@ -84,27 +69,61 @@ class TripsActivity : BasicLayoutActivity() {
 
 
     fun addToDb(){
-        var trip = Trip(grade = 8.9)
-        var pos1 = Position(latitude = 3.5, longitude = 4.5, timestamp = 12345, correspondingTripId = trip.tripId)
-        var pos2 = Position(latitude = 3.5, longitude = 4.8, timestamp = 12346, correspondingTripId = trip.tripId)
-        var data: List<TripWithPositions>
+        var trip1 = Trip(grade = 8.9)
+        var trip2 = Trip(grade = 3.9)
+        var trip3 = Trip(grade = 9.4)
+        var pos1 = Position(latitude = 54.563522314691056, longitude = 18.40109839933261, timestamp = 12345, correspondingTripId = 0)
+        var pos2 = Position(54.56415571019818, 18.399975607374525, timestamp = 0, correspondingTripId = 0)
+        var pos3 = Position(54.56651326234868, 18.40216049991854, timestamp = 0, correspondingTripId = 0)
+        var pos4 = Position(54.57103445481589, 18.388201464222984, timestamp = 0, correspondingTripId = 0)
+        var pos5 = Position(54.57437664837222, 18.38119160025676, timestamp = 0, correspondingTripId = 0)
+        var pos6 = Position(54.58477087728291, 18.363409001991673, timestamp = 0, correspondingTripId = 0)
+        var pos7 = Position(54.60505924199695, 18.34790233359333, timestamp = 0, correspondingTripId = 0)
+        var pos8 = Position(54.60585017805469, 18.34271321297222, timestamp = 0, correspondingTripId = 0)
+        var pos9 = Position(54.60423313695798, 18.248823522264587, timestamp = 0, correspondingTripId = 0)
+        var vio1 = Violation(speed = 60.5, rpm = 3500, oilTemperature = 90, coolantTemperature = 50, lateralGForce = 1.2, linearGForce = 2.3, timestamp = 0, latitude = 54.56715532162732, longitude = 18.400209281470914, correspondingVTripId = 0)
+        var vio2 = Violation(speed = 91.3, rpm = 2100, oilTemperature = 90, coolantTemperature = 50, lateralGForce = 1.2, linearGForce = 2.3, timestamp = 0, latitude = 54.58249343307359, longitude = 18.36719312637782, correspondingVTripId = 0)
+        var vio3 = Violation(speed = 114.5, rpm = 2800, oilTemperature = 90, coolantTemperature = 50, lateralGForce = 1.2, linearGForce = 2.3, timestamp = 0, latitude = 54.60451501071257, longitude = 18.309545986925972, correspondingVTripId = 0)
+        var dataTp: List<TripWithPositions>
+        var dataTv: List<TripWithViolations>
         db = TripRoomDatabase.getDatabase(this)
         tripDao = db!!.tripDao()
         positionDao = db!!.positionDao()
+        violationDao = db!!.violationDao()
+
         GlobalScope.launch {
-            var tripId = tripDao!!.insertTrip(trip)
+            var tripId = tripDao!!.insertTrip(trip1)
             pos1.correspondingTripId = tripId.toInt()
             pos2.correspondingTripId = tripId.toInt()
-            positionDao!!.insertPosition(pos1)
-            positionDao!!.insertPosition(pos2)
-            tripWithPosDao = db!!.tripWithPositionsDao()
-            data = tripWithPosDao!!.getTripsWithPositions()
-            data.forEach{
-                println(it.trip.grade)
-                println(it.positions.size)
-            }
-            val textField: TextView = findViewById(R.id.dbTest)
-            textField.text = data[0].trip.grade.toString()
+            pos3.correspondingTripId = tripId.toInt()
+            pos4.correspondingTripId = tripId.toInt()
+            pos5.correspondingTripId = tripId.toInt()
+            positionDao!!.insertMultiplePositions(pos1, pos2, pos3, pos4, pos5)
+            vio1.correspondingVTripId = tripId.toInt()
+            vio2.correspondingVTripId = tripId.toInt()
+            violationDao!!.insertMultipleViolations(vio1, vio2)
+
+            tripId = tripDao!!.insertTrip(trip2)
+            pos3.correspondingTripId = tripId.toInt()
+            pos4.correspondingTripId = tripId.toInt()
+            pos5.correspondingTripId = tripId.toInt()
+            pos6.correspondingTripId = tripId.toInt()
+            pos7.correspondingTripId = tripId.toInt()
+            positionDao!!.insertMultiplePositions(pos3, pos4, pos5, pos6, pos7)
+            vio2.correspondingVTripId = tripId.toInt()
+            violationDao!!.insertViolation(vio2)
+
+            tripId = tripDao!!.insertTrip(trip3)
+            pos5.correspondingTripId = tripId.toInt()
+            pos6.correspondingTripId = tripId.toInt()
+            pos7.correspondingTripId = tripId.toInt()
+            pos8.correspondingTripId = tripId.toInt()
+            pos9.correspondingTripId = tripId.toInt()
+            positionDao!!.insertMultiplePositions(pos5, pos6, pos7, pos8, pos9)
+            vio2.correspondingVTripId = tripId.toInt()
+            vio3.correspondingVTripId = tripId.toInt()
+            violationDao!!.insertMultipleViolations(vio2, vio3)
+
         }
 
     }
