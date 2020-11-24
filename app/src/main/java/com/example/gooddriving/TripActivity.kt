@@ -33,19 +33,6 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
         actionBar!!.setDisplayHomeAsUpEnabled(true)
         setContentView(R.layout.activity_trip)
 
-        if (ContextCompat.checkSelfPermission(this@TripActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION) !==
-            PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this@TripActivity,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(this@TripActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-            } else {
-                ActivityCompat.requestPermissions(this@TripActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-            }
-        }
-
         val tripNameToDisplay = intent.getStringExtra(tripName)
 
         var textView: TextView = findViewById(R.id.message1)
@@ -58,12 +45,6 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.tripMap) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
-
-        val locationButton : Button = findViewById(R.id.location_button)
-        locationButton.setOnClickListener {
-            var location = Location(GPS_PROVIDER)
-            Toast.makeText(this,"Your current location: " + location.latitude + ", " + location.longitude, Toast.LENGTH_LONG).show()
-        }
 
     }
 
@@ -83,22 +64,4 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
         return true
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
-        when (requestCode) {
-            1 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] ==
-                    PackageManager.PERMISSION_GRANTED) {
-                    if ((ContextCompat.checkSelfPermission(this@TripActivity,
-                            Manifest.permission.ACCESS_FINE_LOCATION) ===
-                                PackageManager.PERMISSION_GRANTED)) {
-                        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
-                }
-                return
-            }
-        }
-    }
 }
