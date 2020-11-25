@@ -4,13 +4,14 @@ import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.gooddriving.db.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class TripsActivity : BasicLayoutActivity() {
 
@@ -37,6 +38,24 @@ class TripsActivity : BasicLayoutActivity() {
         textMessage = findViewById(R.id.message)
         navView.selectedItemId = R.id.navigation_trips
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
+        var listOfTripsLayout : LinearLayout = findViewById(R.id.list_of_trips)
+        tripDao = db!!.tripDao()
+        var listOfTrips : List<Trip>? = null
+        var task = GlobalScope.async {
+            listOfTrips = tripDao!!.getAllTrips()
+        }
+        runBlocking{
+            task.await()
+        }
+
+
+        for ((i, singleTrip) in listOfTrips!!.withIndex())
+        {
+            var inflatedView = View.inflate(listOfTripsLayout.context, R.layout.trip_list_element, listOfTripsLayout)
+            listOfTripsLayout.getChildAt(i+4).findViewById<TextView>(R.id.trip_expanded).text = singleTrip.grade.toString() // i + 4 because we have four mock objects, not from db
+        }
+
 
         val tripOneButton: Button = findViewById(R.id.trip1_button)
         tripOneButton.setOnClickListener {
@@ -65,6 +84,8 @@ class TripsActivity : BasicLayoutActivity() {
             val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripName, "Trip four")
             startActivity(intent)
         }
+
+
     }
 
 

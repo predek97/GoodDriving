@@ -14,4 +14,7 @@ interface ViolationDao {
 
     @Insert
     fun insertViolation(violation: Violation)
+
+    @Insert
+    fun insertMultipleViolations(vararg violation: Violation)
 }
