@@ -9,4 +9,8 @@ interface TripWithViolationsDao {
     @Transaction
     @Query("SELECT * FROM trip_table")
     fun getTripsWithViolations() : List<TripWithViolations>
+
+    @Transaction
+    @Query("SELECT * FROM trip_table WHERE tripId = :trip_id")
+    fun getSingleTripWithViolations(trip_id: Long) : TripWithViolations
 }

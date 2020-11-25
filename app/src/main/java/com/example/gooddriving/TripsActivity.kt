@@ -54,34 +54,39 @@ class TripsActivity : BasicLayoutActivity() {
         {
             var inflatedView = View.inflate(listOfTripsLayout.context, R.layout.trip_list_element, listOfTripsLayout)
             listOfTripsLayout.getChildAt(i+4).findViewById<TextView>(R.id.trip_expanded).text = singleTrip.grade.toString() // i + 4 because we have four mock objects, not from db
+            listOfTripsLayout.getChildAt(i+4).findViewById<Button>(R.id.trip_button).setOnClickListener {
+                Toast.makeText(this, "Trip info expanded", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripId, singleTrip.tripId.toString())
+                startActivity(intent)
+            }
         }
 
 
         val tripOneButton: Button = findViewById(R.id.trip1_button)
         tripOneButton.setOnClickListener {
             Toast.makeText(this, "Trip one info expanded", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripName, "Trip one")
+            val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripId, "Trip one")
             startActivity(intent)
         }
 
         val tripTwoButton: Button = findViewById(R.id.trip2_button)
         tripTwoButton.setOnClickListener {
             Toast.makeText(this, "Trip two info expanded", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripName, "Trip two")
+            val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripId, "Trip two")
             startActivity(intent)
         }
 
         val tripThreeButton: Button = findViewById(R.id.trip3_button)
         tripThreeButton.setOnClickListener {
             Toast.makeText(this, "Trip three info expanded", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripName, "Trip three")
+            val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripId, "Trip three")
             startActivity(intent)
         }
 
         val tripFourButton: Button = findViewById(R.id.trip4_button)
         tripFourButton.setOnClickListener {
             Toast.makeText(this, "Trip four info expanded", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripName, "Trip four")
+            val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripId, "Trip four")
             startActivity(intent)
         }
 
