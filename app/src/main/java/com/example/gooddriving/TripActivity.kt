@@ -1,29 +1,22 @@
 package com.example.gooddriving
 
-import android.Manifest
-import android.app.ActionBar
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.location.LocationManager.GPS_PROVIDER
+import android.R.attr.path
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.example.gooddriving.db.*
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.activity_trip.*
+import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+
 
 class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
 
@@ -33,6 +26,8 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
     var db: TripRoomDatabase? = null
     var tripWithPosDao : TripWithPositionsDao? = null
     var tripWithVioDao : TripWithViolationsDao? = null
+    var tripWithViolations : TripWithViolations? = null
+    var tripWithPositions : TripWithPositions? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +38,7 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
         var tripIdToDisplay = intent.getStringExtra(tripId).toLong()
 
 
-        var tripWithViolations : TripWithViolations? = null
-        var tripWithPositions : TripWithPositions? = null
+
 
         db = TripRoomDatabase.getDatabase(this)
         var task = GlobalScope.async {
@@ -58,8 +52,8 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
         }
 
         findViewById<TextView>(R.id.tripRating).text = tripWithPositions!!.trip.grade.toString()
-        findViewById<TextView>(R.id.tripAvgSpeed).text = calculateAvgSpeed(tripWithViolations!!).toString() + "km/h"
-        findViewById<TextView>(R.id.tripMaxSpeed).text = getMaxSpeed(tripWithViolations!!).toString() + "km/h"
+        findViewById<TextView>(R.id.tripAvgSpeed).text = calculateAvgSpeed(tripWithViolations!!).toString() + " km/h"
+        findViewById<TextView>(R.id.tripMaxSpeed).text = getMaxSpeed(tripWithViolations!!).toString() + " km/h"
 
 
         var textView: TextView = findViewById(R.id.message1)
@@ -95,6 +89,7 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
 
 
     override fun onMapReady(googleMap: GoogleMap?) {
+        /*
         googleMap?.apply {
             val sydney = LatLng(54.6, 18.29)
             addMarker(
@@ -102,6 +97,41 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
                     .position(sydney)
                     .title("Marker in Wejherowo")
             )
+        }
+        */
+        var polylineOptions = PolylineOptions()
+        polylineOptions.clickable(true)
+
+        for (pos in tripWithPositions!!.positions){
+            polylineOptions.add(LatLng(pos.latitude, pos.longitude))
+        }
+        googleMap?.addPolyline(polylineOptions)
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(tripWithPositions!!.positions[0].latitude, tripWithPositions!!.positions[0].longitude), 12f))
+        googleMap?.apply {
+            val sydney = LatLng(tripWithPositions!!.positions[0].latitude, tripWithPositions!!.positions[0].longitude)
+            addMarker(
+                MarkerOptions()
+                    .position(sydney)
+                    .title("Trip start")
+            )
+        }
+        googleMap?.apply {
+            val sydney = LatLng(tripWithPositions!!.positions.last().latitude, tripWithPositions!!.positions.last().longitude)
+            addMarker(
+                MarkerOptions()
+                    .position(sydney)
+                    .title("Trip end")
+            )
+        }
+
+        for ((i, vio) in tripWithViolations!!.violations.withIndex()){
+            googleMap?.apply {
+                addMarker(
+                    MarkerOptions()
+                        .position(LatLng(vio.latitude, vio.longitude))
+                        .title("Violation " + (i+1).toString())
+                )
+            }
         }
     }
     override fun onSupportNavigateUp(): Boolean {

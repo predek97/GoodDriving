@@ -1,6 +1,7 @@
 package com.example.gooddriving.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
@@ -17,4 +18,7 @@ interface ViolationDao {
 
     @Insert
     fun insertMultipleViolations(vararg violation: Violation)
+
+    @Query("DELETE FROM violation_table WHERE violationId = :vioId")
+    fun deleteViolation(vioId : Long)
 }

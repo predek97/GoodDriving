@@ -19,8 +19,6 @@ class TripsActivity : BasicLayoutActivity() {
     var tripDao : TripDao? = null
     var positionDao : PositionDao? = null
     var violationDao: ViolationDao? = null
-    var tripWithPosDao : TripWithPositionsDao? = null
-    var tripWithVioDao : TripWithViolationsDao? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +30,7 @@ class TripsActivity : BasicLayoutActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         //addToDb() - dane już dodane
-        Thread.sleep(2000)
+        //Thread.sleep(2000)
         //removeFromDb()
 
         textMessage = findViewById(R.id.message)
@@ -53,7 +51,7 @@ class TripsActivity : BasicLayoutActivity() {
         for ((i, singleTrip) in listOfTrips!!.withIndex())
         {
             var inflatedView = View.inflate(listOfTripsLayout.context, R.layout.trip_list_element, listOfTripsLayout)
-            listOfTripsLayout.getChildAt(i+4).findViewById<TextView>(R.id.trip_expanded).text = singleTrip.grade.toString() // i + 4 because we have four mock objects, not from db
+            listOfTripsLayout.getChildAt(i+4).findViewById<TextView>(R.id.trip_expanded).text = "Trip rated " + singleTrip.grade.toString() // i + 4 because we have four mock objects, not from db
             listOfTripsLayout.getChildAt(i+4).findViewById<Button>(R.id.trip_button).setOnClickListener {
                 Toast.makeText(this, "Trip info expanded", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripId, singleTrip.tripId.toString())
@@ -126,8 +124,7 @@ class TripsActivity : BasicLayoutActivity() {
             pos5.correspondingTripId = tripId.toInt()
             positionDao!!.insertMultiplePositions(pos1, pos2, pos3, pos4, pos5)
             vio1.correspondingVTripId = tripId.toInt()
-            vio2.correspondingVTripId = tripId.toInt()
-            violationDao!!.insertMultipleViolations(vio1, vio2)
+            violationDao!!.insertViolation(vio1)
 
             tripId = tripDao!!.insertTrip(trip2)
             pos3.correspondingTripId = tripId.toInt()
