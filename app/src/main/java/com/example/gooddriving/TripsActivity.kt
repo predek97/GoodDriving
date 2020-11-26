@@ -24,6 +24,7 @@ class TripsActivity : BasicLayoutActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trips)
+        this.title = "Trip summary"
         db = TripRoomDatabase.getDatabase(this)
 
 
@@ -51,7 +52,7 @@ class TripsActivity : BasicLayoutActivity() {
         for ((i, singleTrip) in listOfTrips!!.withIndex())
         {
             var inflatedView = View.inflate(listOfTripsLayout.context, R.layout.trip_list_element, listOfTripsLayout)
-            listOfTripsLayout.getChildAt(i+4).findViewById<TextView>(R.id.trip_expanded).text = "Trip rated " + singleTrip.grade.toString() // i + 4 because we have four mock objects, not from db
+            listOfTripsLayout.getChildAt(i+4).findViewById<TextView>(R.id.trip_expanded).text = "Trip #" + singleTrip.tripId.toString() // i + 4 because we have four mock objects, not from db
             listOfTripsLayout.getChildAt(i+4).findViewById<Button>(R.id.trip_button).setOnClickListener {
                 Toast.makeText(this, "Trip info expanded", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripId, singleTrip.tripId.toString())

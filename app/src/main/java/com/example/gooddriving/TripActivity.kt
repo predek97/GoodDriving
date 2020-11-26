@@ -38,6 +38,7 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
         var tripIdToDisplay = intent.getStringExtra(tripId).toLong()
 
 
+        this.title = "Trip #$tripIdToDisplay"
 
 
         db = TripRoomDatabase.getDatabase(this)
