@@ -106,9 +106,9 @@ class TripsActivity : BasicLayoutActivity() {
         var pos7 = Position(54.60505924199695, 18.34790233359333, timestamp = 0, correspondingTripId = 0)
         var pos8 = Position(54.60585017805469, 18.34271321297222, timestamp = 0, correspondingTripId = 0)
         var pos9 = Position(54.60423313695798, 18.248823522264587, timestamp = 0, correspondingTripId = 0)
-        var vio1 = Violation(speed = 60.5, rpm = 3500, oilTemperature = 90, coolantTemperature = 50, lateralGForce = 1.2, linearGForce = 2.3, timestamp = 0, latitude = 54.56715532162732, longitude = 18.400209281470914, correspondingVTripId = 0)
-        var vio2 = Violation(speed = 91.3, rpm = 2100, oilTemperature = 90, coolantTemperature = 50, lateralGForce = 1.2, linearGForce = 2.3, timestamp = 0, latitude = 54.58249343307359, longitude = 18.36719312637782, correspondingVTripId = 0)
-        var vio3 = Violation(speed = 114.5, rpm = 2800, oilTemperature = 90, coolantTemperature = 50, lateralGForce = 1.2, linearGForce = 2.3, timestamp = 0, latitude = 54.60451501071257, longitude = 18.309545986925972, correspondingVTripId = 0)
+        var vio1 = Violation(speed = 60.5, lateralGForce = 1.2, linearGForce = 2.3, timestamp = 0, latitude = 54.56715532162732, longitude = 18.400209281470914, correspondingVTripId = 0)
+        var vio2 = Violation(speed = 91.3, lateralGForce = 1.2, linearGForce = 2.3, timestamp = 0, latitude = 54.58249343307359, longitude = 18.36719312637782, correspondingVTripId = 0)
+        var vio3 = Violation(speed = 114.5, lateralGForce = 1.2, linearGForce = 2.3, timestamp = 0, latitude = 54.60451501071257, longitude = 18.309545986925972, correspondingVTripId = 0)
         var dataTp: List<TripWithPositions>
         var dataTv: List<TripWithViolations>
         db = TripRoomDatabase.getDatabase(this)
@@ -118,34 +118,34 @@ class TripsActivity : BasicLayoutActivity() {
 
         GlobalScope.launch {
             var tripId = tripDao!!.insertTrip(trip1)
-            pos1.correspondingTripId = tripId.toInt()
-            pos2.correspondingTripId = tripId.toInt()
-            pos3.correspondingTripId = tripId.toInt()
-            pos4.correspondingTripId = tripId.toInt()
-            pos5.correspondingTripId = tripId.toInt()
+            pos1.correspondingTripId = tripId
+            pos2.correspondingTripId = tripId
+            pos3.correspondingTripId = tripId
+            pos4.correspondingTripId = tripId
+            pos5.correspondingTripId = tripId
             positionDao!!.insertMultiplePositions(pos1, pos2, pos3, pos4, pos5)
-            vio1.correspondingVTripId = tripId.toInt()
+            vio1.correspondingVTripId = tripId
             violationDao!!.insertViolation(vio1)
 
             tripId = tripDao!!.insertTrip(trip2)
-            pos3.correspondingTripId = tripId.toInt()
-            pos4.correspondingTripId = tripId.toInt()
-            pos5.correspondingTripId = tripId.toInt()
-            pos6.correspondingTripId = tripId.toInt()
-            pos7.correspondingTripId = tripId.toInt()
+            pos3.correspondingTripId = tripId
+            pos4.correspondingTripId = tripId
+            pos5.correspondingTripId = tripId
+            pos6.correspondingTripId = tripId
+            pos7.correspondingTripId = tripId
             positionDao!!.insertMultiplePositions(pos3, pos4, pos5, pos6, pos7)
-            vio2.correspondingVTripId = tripId.toInt()
+            vio2.correspondingVTripId = tripId
             violationDao!!.insertViolation(vio2)
 
             tripId = tripDao!!.insertTrip(trip3)
-            pos5.correspondingTripId = tripId.toInt()
-            pos6.correspondingTripId = tripId.toInt()
-            pos7.correspondingTripId = tripId.toInt()
-            pos8.correspondingTripId = tripId.toInt()
-            pos9.correspondingTripId = tripId.toInt()
+            pos5.correspondingTripId = tripId
+            pos6.correspondingTripId = tripId
+            pos7.correspondingTripId = tripId
+            pos8.correspondingTripId = tripId
+            pos9.correspondingTripId = tripId
             positionDao!!.insertMultiplePositions(pos5, pos6, pos7, pos8, pos9)
-            vio2.correspondingVTripId = tripId.toInt()
-            vio3.correspondingVTripId = tripId.toInt()
+            vio2.correspondingVTripId = tripId
+            vio3.correspondingVTripId = tripId
             violationDao!!.insertMultipleViolations(vio2, vio3)
 
         }
