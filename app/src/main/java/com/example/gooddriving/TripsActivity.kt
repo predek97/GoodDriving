@@ -3,6 +3,7 @@ package com.example.gooddriving
 import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
+import android.location.LocationManager.GPS_PROVIDER
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -21,16 +22,17 @@ class TripsActivity : BasicLayoutActivity() {
     var violationDao: ViolationDao? = null
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trips)
         this.title = "Trip summary"
-        db = TripRoomDatabase.getDatabase(this)
-
+        //db = TripRoomDatabase.getDatabase(this)
+        var tripService = TripService(this)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        //addToDb() - dane już dodane
+        //addToDb() //- dane już dodane
         //Thread.sleep(2000)
         //removeFromDb()
 
@@ -39,23 +41,35 @@ class TripsActivity : BasicLayoutActivity() {
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         var listOfTripsLayout : LinearLayout = findViewById(R.id.list_of_trips)
-        tripDao = db!!.tripDao()
-        var listOfTrips : List<Trip>? = null
-        var task = GlobalScope.async {
-            listOfTrips = tripDao!!.getAllTrips()
-        }
-        runBlocking{
-            task.await()
-        }
 
+        var listOfTrips = tripService.getAllTripsFromDB()
 
-        for ((i, singleTrip) in listOfTrips!!.withIndex())
+/*
+        var loc1 = Location(GPS_PROVIDER)
+        loc1.latitude = 54.60505924199695
+        loc1.longitude = 18.34790233359333
+        loc1.time = 0
+        var loc2 = Location(GPS_PROVIDER)
+        loc2.latitude = 54.60585017805469
+        loc2.longitude = 18.34271321297222
+        loc2.time = 0
+        var loc3 = Location(GPS_PROVIDER)
+        loc3.latitude = 54.60423313695798
+        loc3.longitude = 18.248823522264587
+        loc3.time = 0
+        var vio1 = Violation(51.2, 3.4, 5.5, 54.60585017805469, 18.34271321297222, 0, 0)
+        var listLocation = mutableListOf(loc1, loc2, loc3)
+        var listViolation = listOf(vio1)
+        var testTripModel = TripModel(listLocation,listViolation, 4.5, "2020-12-01", 3.3, 1200000, 76.5, 43.5, null)
+        tripService.save(testTripModel)
+*/
+        for ((i, singleTrip) in listOfTrips.withIndex())
         {
             var inflatedView = View.inflate(listOfTripsLayout.context, R.layout.trip_list_element, listOfTripsLayout)
-            listOfTripsLayout.getChildAt(i+4).findViewById<TextView>(R.id.trip_expanded).text = "Trip #" + singleTrip.tripId.toString() // i + 4 because we have four mock objects, not from db
+            listOfTripsLayout.getChildAt(i+4).findViewById<TextView>(R.id.trip_expanded).text = "Trip #" + singleTrip.tripIdFromDb.toString() + " at " + singleTrip.dateOfTrip // i + 4 because we have four mock objects, not from db
             listOfTripsLayout.getChildAt(i+4).findViewById<Button>(R.id.trip_button).setOnClickListener {
                 Toast.makeText(this, "Trip info expanded", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripId, singleTrip.tripId.toString())
+                val intent = Intent(this, TripActivity::class.java).putExtra(TripActivity.tripId, singleTrip.tripIdFromDb.toString())
                 startActivity(intent)
             }
         }
@@ -94,9 +108,9 @@ class TripsActivity : BasicLayoutActivity() {
 
 
     fun addToDb(){
-        var trip1 = Trip(grade = 8.9)
-        var trip2 = Trip(grade = 3.9)
-        var trip3 = Trip(grade = 9.4)
+        var trip1 = Trip(grade = 8.9, dateOfTrip = "2020-11-30", distanceCovered = 15.6, timeElapsed = 900000, maxSpeed = 94.3, avgSpeed = 31.2)
+        var trip2 = Trip(grade = 3.9, dateOfTrip = "2020-11-30", distanceCovered = 6.4, timeElapsed = 900000, maxSpeed = 74.3, avgSpeed = 31.2)
+        var trip3 = Trip(grade = 9.4, dateOfTrip = "2020-11-30", distanceCovered = 153.6, timeElapsed = 900000, maxSpeed = 124.3, avgSpeed = 31.2)
         var pos1 = Position(latitude = 54.563522314691056, longitude = 18.40109839933261, timestamp = 12345, correspondingTripId = 0)
         var pos2 = Position(54.56415571019818, 18.399975607374525, timestamp = 0, correspondingTripId = 0)
         var pos3 = Position(54.56651326234868, 18.40216049991854, timestamp = 0, correspondingTripId = 0)
@@ -116,7 +130,7 @@ class TripsActivity : BasicLayoutActivity() {
         positionDao = db!!.positionDao()
         violationDao = db!!.violationDao()
 
-        GlobalScope.launch {
+        var task = GlobalScope.async {
             var tripId = tripDao!!.insertTrip(trip1)
             pos1.correspondingTripId = tripId
             pos2.correspondingTripId = tripId
@@ -149,6 +163,9 @@ class TripsActivity : BasicLayoutActivity() {
             violationDao!!.insertMultipleViolations(vio2, vio3)
 
         }
+        runBlocking {
+            task.await()
+        }
 
     }
 
@@ -156,9 +173,12 @@ class TripsActivity : BasicLayoutActivity() {
         db = TripRoomDatabase.getDatabase(this)
         tripDao = db!!.tripDao()
         positionDao = db!!.positionDao()
-        GlobalScope.launch {
+        var task = GlobalScope.async {
             positionDao!!.deleteAll()
             tripDao!!.deleteAll()
+        }
+        runBlocking {
+            task.await()
         }
     }
 }

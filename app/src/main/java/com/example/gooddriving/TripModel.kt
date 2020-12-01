@@ -16,7 +16,8 @@ class TripModel (
     var distanceCovered: Double,
     var timeElapsed: Long,
     var maxSpeed: Double,
-    var avgSpeed: Double
+    var avgSpeed: Double,
+    var tripIdFromDb: Long?
 ) {
 
     @ExperimentalTime
