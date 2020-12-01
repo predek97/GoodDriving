@@ -21,6 +21,6 @@ class TripModel (
 ) {
 
     @ExperimentalTime
-    var timeElapsedConverted: Duration = timeElapsed.toDuration(TimeUnit.MINUTES)
+    var timeElapsedConverted: Duration = timeElapsed.toDuration(TimeUnit.MILLISECONDS)
 
 }

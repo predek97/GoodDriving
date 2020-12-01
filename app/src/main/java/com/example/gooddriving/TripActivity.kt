@@ -16,6 +16,8 @@ import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
 
 
 class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
@@ -28,7 +30,9 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
     var tripWithVioDao : TripWithViolationsDao? = null
     var tripWithViolations : TripWithViolations? = null
     var tripWithPositions : TripWithPositions? = null
+    var tripToDisplay: TripModel? = null
 
+    @ExperimentalTime
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val actionBar = supportActionBar
@@ -41,6 +45,8 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
         this.title = "Trip #$tripIdToDisplay"
 
 
+        var tripService = TripService(this)
+        tripToDisplay = tripService.getTrip(tripIdToDisplay)
         db = TripRoomDatabase.getDatabase(this)
         var task = GlobalScope.async {
             tripWithPosDao = db!!.tripWithPositionsDao()
@@ -52,13 +58,13 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
             task.await()
         }
 
-        findViewById<TextView>(R.id.tripRating).text = tripWithPositions!!.trip.grade.toString()
-        findViewById<TextView>(R.id.tripAvgSpeed).text = calculateAvgSpeed(tripWithViolations!!).toString() + " km/h"
-        findViewById<TextView>(R.id.tripMaxSpeed).text = getMaxSpeed(tripWithViolations!!).toString() + " km/h"
+        findViewById<TextView>(R.id.tripRating).text = tripToDisplay!!.grade.toString()
+        findViewById<TextView>(R.id.tripDate).text = tripToDisplay!!.dateOfTrip
+        findViewById<TextView>(R.id.tripDistance).text = tripToDisplay!!.distanceCovered.toString() + " km"
+        findViewById<TextView>(R.id.tripDuration).text = tripToDisplay!!.timeElapsedConverted.toString(DurationUnit.MINUTES)
+        findViewById<TextView>(R.id.tripAvgSpeed).text = tripToDisplay!!.avgSpeed.toString() + " km/h"
+        findViewById<TextView>(R.id.tripMaxSpeed).text = tripToDisplay!!.maxSpeed.toString() + " km/h"
 
-
-        var textView: TextView = findViewById(R.id.message1)
-        textView.text = tripIdToDisplay.toString()
 
         if (getString(R.string.google_maps_key).isEmpty()) {
             Toast.makeText(this, "Add your own API key in MapWithMarker/app/secure.properties as MAPS_API_KEY=YOUR_API_KEY", Toast.LENGTH_LONG).show()
@@ -103,13 +109,13 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
         var polylineOptions = PolylineOptions()
         polylineOptions.clickable(true)
 
-        for (pos in tripWithPositions!!.positions){
+        for (pos in tripToDisplay!!.locationList){
             polylineOptions.add(LatLng(pos.latitude, pos.longitude))
         }
         googleMap?.addPolyline(polylineOptions)
-        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(tripWithPositions!!.positions[0].latitude, tripWithPositions!!.positions[0].longitude), 12f))
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(tripToDisplay!!.locationList[0].latitude, tripToDisplay!!.locationList[0].longitude), 12f))
         googleMap?.apply {
-            val sydney = LatLng(tripWithPositions!!.positions[0].latitude, tripWithPositions!!.positions[0].longitude)
+            val sydney = LatLng(tripToDisplay!!.locationList[0].latitude, tripToDisplay!!.locationList[0].longitude)
             addMarker(
                 MarkerOptions()
                     .position(sydney)
@@ -117,7 +123,7 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
             )
         }
         googleMap?.apply {
-            val sydney = LatLng(tripWithPositions!!.positions.last().latitude, tripWithPositions!!.positions.last().longitude)
+            val sydney = LatLng(tripToDisplay!!.locationList.last().latitude, tripToDisplay!!.locationList.last().longitude)
             addMarker(
                 MarkerOptions()
                     .position(sydney)
@@ -125,7 +131,7 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
             )
         }
 
-        for ((i, vio) in tripWithViolations!!.violations.withIndex()){
+        for ((i, vio) in tripToDisplay!!.violationList.withIndex()){
             googleMap?.apply {
                 addMarker(
                     MarkerOptions()
