@@ -8,15 +8,20 @@ import android.os.Bundle
 import android.os.Looper
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DashboardActivity : BasicLayoutActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var tripService: TripService
     protected lateinit var locations : ArrayList<Location>;
+    protected var distanceCovered : Double = 0.0;
 
     private var locationManager: LocationManager? = null
 
@@ -34,10 +39,12 @@ class DashboardActivity : BasicLayoutActivity() {
         stopButton.setOnClickListener(onStopButtonSelectedListener)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        tripService = TripService(this)
     }
 
     protected val onStartButtonSelectedListener = View.OnClickListener {
         locations = ArrayList();
+        distanceCovered = 0.0
         locationCallback = MyLocationCallback(this.locations, this)
         try {
             val locationRequest = LocationRequest.create()?.apply {
@@ -57,8 +64,32 @@ class DashboardActivity : BasicLayoutActivity() {
     }
 
     protected val onStopButtonSelectedListener = View.OnClickListener {
-        var locations = this.locations
-        Toast.makeText(this, locations.size, Toast.LENGTH_LONG).show()
+        tripService.save(generateTrip())
+    }
+
+
+    protected fun generateTrip(): TripModel {
+        val dateOfTrip = Date(locations.first().time)
+        val dateFormat: DateFormat = SimpleDateFormat("dd/mm/yyyy HH:mm")
+        val timeElapsed = (locations.last().time - locations.first().time)/1000
+        var maxSpeed = 0.0
+        var avgSpeed = 0.0
+        for(location in locations) {
+            maxSpeed = if(maxSpeed < location.speed) location.speed.toDouble() else maxSpeed
+            avgSpeed += location.speed
+        }
+        avgSpeed /= locations.size
+        return TripModel(
+            locationList = locations,
+            violationList = ArrayList(),
+            grade = 0.0,
+            dateOfTrip = dateFormat.format(dateOfTrip),
+            distanceCovered = this.distanceCovered,
+            timeElapsed = timeElapsed,
+            maxSpeed = maxSpeed * 3.6, //convert to km/h from m/s
+            avgSpeed = avgSpeed * 3.6,
+            tripIdFromDb = 0
+        )
     }
 
     protected lateinit var locationCallback: LocationCallback
