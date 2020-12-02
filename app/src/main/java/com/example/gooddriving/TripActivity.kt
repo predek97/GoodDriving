@@ -1,55 +1,70 @@
 package com.example.gooddriving
 
-import android.Manifest
-import android.app.ActionBar
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
-import android.location.LocationManager.GPS_PROVIDER
+import android.R.attr.path
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
+import com.example.gooddriving.db.*
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.activity_trip.*
+import com.google.android.gms.maps.model.PolylineOptions
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
+
 
 class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
 
     companion object {
-        const val tripName = "default trip name"
+        const val tripId = "0"
     }
+    var db: TripRoomDatabase? = null
+    var tripWithPosDao : TripWithPositionsDao? = null
+    var tripWithVioDao : TripWithViolationsDao? = null
+    var tripWithViolations : TripWithViolations? = null
+    var tripWithPositions : TripWithPositions? = null
+    var tripToDisplay: TripModel? = null
 
+    @ExperimentalTime
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val actionBar = supportActionBar
         actionBar!!.setDisplayHomeAsUpEnabled(true)
         setContentView(R.layout.activity_trip)
 
-        if (ContextCompat.checkSelfPermission(this@TripActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION) !==
-            PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this@TripActivity,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(this@TripActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-            } else {
-                ActivityCompat.requestPermissions(this@TripActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-            }
+        var tripIdToDisplay = intent.getStringExtra(tripId).toLong()
+
+
+        this.title = "Trip #$tripIdToDisplay"
+
+
+        var tripService = TripService(this)
+        tripToDisplay = tripService.getTrip(tripIdToDisplay)
+        db = TripRoomDatabase.getDatabase(this)
+        var task = GlobalScope.async {
+            tripWithPosDao = db!!.tripWithPositionsDao()
+            tripWithVioDao = db!!.tripWithViolationsDao()
+            tripWithPositions = tripWithPosDao!!.getSingleTripWithPositions(tripIdToDisplay)
+            tripWithViolations = tripWithVioDao!!.getSingleTripWithViolations(tripIdToDisplay)
+        }
+        runBlocking {
+            task.await()
         }
 
-        val tripNameToDisplay = intent.getStringExtra(tripName)
+        findViewById<TextView>(R.id.tripRating).text = tripToDisplay!!.grade.toString()
+        findViewById<TextView>(R.id.tripDate).text = tripToDisplay!!.dateOfTrip
+        findViewById<TextView>(R.id.tripDistance).text = tripToDisplay!!.distanceCovered.toString() + " km"
+        findViewById<TextView>(R.id.tripDuration).text = tripToDisplay!!.timeElapsedConverted.toString(DurationUnit.MINUTES)
+        findViewById<TextView>(R.id.tripAvgSpeed).text = tripToDisplay!!.avgSpeed.toString() + " km/h"
+        findViewById<TextView>(R.id.tripMaxSpeed).text = tripToDisplay!!.maxSpeed.toString() + " km/h"
 
-        var textView: TextView = findViewById(R.id.message1)
-        textView.text = tripNameToDisplay
 
         if (getString(R.string.google_maps_key).isEmpty()) {
             Toast.makeText(this, "Add your own API key in MapWithMarker/app/secure.properties as MAPS_API_KEY=YOUR_API_KEY", Toast.LENGTH_LONG).show()
@@ -59,16 +74,29 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.tripMap) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
 
-        val locationButton : Button = findViewById(R.id.location_button)
-        locationButton.setOnClickListener {
-            var location = Location(GPS_PROVIDER)
-            Toast.makeText(this,"Your current location: " + location.latitude + ", " + location.longitude, Toast.LENGTH_LONG).show()
-        }
+    }
 
+    fun calculateAvgSpeed(trip: TripWithViolations): Double {
+        var sum : Double = 0.0
+        for (vio in trip.violations){
+            sum += vio.speed
+        }
+        return sum/trip.violations.size
+    }
+
+    fun getMaxSpeed(trip: TripWithViolations): Double{
+        var maxSpeed: Double = 0.0
+        for (vio in trip.violations) {
+            if (vio.speed > maxSpeed){
+                maxSpeed = vio.speed
+            }
+        }
+        return maxSpeed
     }
 
 
     override fun onMapReady(googleMap: GoogleMap?) {
+        /*
         googleMap?.apply {
             val sydney = LatLng(54.6, 18.29)
             addMarker(
@@ -77,28 +105,45 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
                     .title("Marker in Wejherowo")
             )
         }
+        */
+        var polylineOptions = PolylineOptions()
+        polylineOptions.clickable(true)
+
+        for (pos in tripToDisplay!!.locationList){
+            polylineOptions.add(LatLng(pos.latitude, pos.longitude))
+        }
+        googleMap?.addPolyline(polylineOptions)
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(tripToDisplay!!.locationList[0].latitude, tripToDisplay!!.locationList[0].longitude), 12f))
+        googleMap?.apply {
+            val sydney = LatLng(tripToDisplay!!.locationList[0].latitude, tripToDisplay!!.locationList[0].longitude)
+            addMarker(
+                MarkerOptions()
+                    .position(sydney)
+                    .title("Trip start")
+            )
+        }
+        googleMap?.apply {
+            val sydney = LatLng(tripToDisplay!!.locationList.last().latitude, tripToDisplay!!.locationList.last().longitude)
+            addMarker(
+                MarkerOptions()
+                    .position(sydney)
+                    .title("Trip end")
+            )
+        }
+
+        for ((i, vio) in tripToDisplay!!.violationList.withIndex()){
+            googleMap?.apply {
+                addMarker(
+                    MarkerOptions()
+                        .position(LatLng(vio.latitude, vio.longitude))
+                        .title("Violation " + (i+1).toString())
+                )
+            }
+        }
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
-        when (requestCode) {
-            1 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] ==
-                    PackageManager.PERMISSION_GRANTED) {
-                    if ((ContextCompat.checkSelfPermission(this@TripActivity,
-                            Manifest.permission.ACCESS_FINE_LOCATION) ===
-                                PackageManager.PERMISSION_GRANTED)) {
-                        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
-                }
-                return
-            }
-        }
-    }
 }

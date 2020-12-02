@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        android:id="@+id/trip_list_item">
+
+    <ImageView
+            android:id="@+id/car_icon_1"
+            android:layout_width="wrap_content"
+            android:layout_height="54dp"
+            android:layout_margin="@dimen/trip_margin"
+            android:contentDescription="@string/my_image_description"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/ic_time_to_leave_black_24dp" />
+
+    <TextView
+            android:id="@+id/trip_expanded"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_margin="@dimen/trip_margin"
+            android:layout_weight="1"
+            android:text="@string/trip_one_info"
+            android:textSize="14sp"
+            app:fontFamily="@font/roboto" />
+
+    <Button
+            android:id="@+id/trip_button"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="@dimen/trip_margin"
+            android:layout_marginEnd="@dimen/trip_margin"
+            android:layout_marginRight="@dimen/trip_margin"
+            android:layout_marginBottom="@dimen/trip_margin"
+            android:layout_weight="1"
+            android:text="@string/trip_button_text"
+            android:textSize="@dimen/trip_button_font_size" />
+
+</LinearLayout>

@@ -16,6 +16,9 @@ interface PositionDao {
     @Insert
     fun insertPosition(position : Position)
 
+    @Insert
+    fun insertMultiplePositions(vararg position : Position)
+
     @Query("DELETE FROM position_table")
     fun deleteAll()
 }
