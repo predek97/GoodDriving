@@ -21,7 +21,7 @@ class DashboardActivity : BasicLayoutActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var tripService: TripService
     protected lateinit var locations : ArrayList<Location>;
-    protected var distanceCovered : Double = 0.0;
+    protected var distanceCovered : Array<Double> = arrayOf(0.0)
 
     private var locationManager: LocationManager? = null
 
@@ -44,8 +44,7 @@ class DashboardActivity : BasicLayoutActivity() {
 
     protected val onStartButtonSelectedListener = View.OnClickListener {
         locations = ArrayList();
-        distanceCovered = 0.0
-        locationCallback = MyLocationCallback(this.locations, this)
+        locationCallback = MyLocationCallback(this.locations, this.distanceCovered)
         try {
             val locationRequest = LocationRequest.create()?.apply {
                 interval = 10000
@@ -70,8 +69,8 @@ class DashboardActivity : BasicLayoutActivity() {
 
     protected fun generateTrip(): TripModel {
         val dateOfTrip = Date(locations.first().time)
-        val dateFormat: DateFormat = SimpleDateFormat("dd/mm/yyyy HH:mm")
-        val timeElapsed = (locations.last().time - locations.first().time)/1000
+        val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
+        val timeElapsed = (locations.last().time - locations.first().time)
         var maxSpeed = 0.0
         var avgSpeed = 0.0
         for(location in locations) {
@@ -84,7 +83,7 @@ class DashboardActivity : BasicLayoutActivity() {
             violationList = ArrayList(),
             grade = 0.0,
             dateOfTrip = dateFormat.format(dateOfTrip),
-            distanceCovered = this.distanceCovered,
+            distanceCovered = this.distanceCovered[0],
             timeElapsed = timeElapsed,
             maxSpeed = maxSpeed * 3.6, //convert to km/h from m/s
             avgSpeed = avgSpeed * 3.6,
@@ -94,7 +93,7 @@ class DashboardActivity : BasicLayoutActivity() {
 
     protected lateinit var locationCallback: LocationCallback
 
-    class MyLocationCallback constructor(var locations : ArrayList<Location>, var context : Context) : LocationCallback() {
+    class MyLocationCallback constructor(var locations : ArrayList<Location>, var distanceCovered : Array<Double>) : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
             super.onLocationResult(locationResult)
             locationResult ?: return
@@ -107,6 +106,7 @@ class DashboardActivity : BasicLayoutActivity() {
             if(locations.size > 0) {
                 val lastLocation = locations.last()
                 val distance = lastLocation.distanceTo(currentLocation)
+                distanceCovered[0] = distanceCovered[0]?.plus(distance)
                 //divide by 1000 to get time in seconds
                 val timeDifference = (currentLocation.time - lastLocation.time)/1000.0
                 val speed = distance/timeDifference
