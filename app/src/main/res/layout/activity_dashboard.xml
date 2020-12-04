@@ -31,21 +31,15 @@
             app:layout_constraintRight_toRightOf="parent"
             app:menu="@menu/bottom_nav_menu"/>
 
-    <Button
-            android:id="@+id/startButton"
+    <ToggleButton
+            android:id="@+id/toggleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start"
-            app:layout_constraintEnd_toStartOf="@+id/stopButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-            android:id="@+id/stopButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:checked="false"
+            android:text="ToggleButton"
+            android:textOff="Start"
+            android:textOn="Stop"
+            tools:layout_editor_absoluteX="98dp"
+            tools:layout_editor_absoluteY="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

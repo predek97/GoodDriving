@@ -1,13 +1,13 @@
 package com.example.gooddriving
 
 
-import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
 import android.widget.Button
+import android.widget.ToggleButton
 import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.DateFormat
@@ -18,6 +18,7 @@ import kotlin.collections.ArrayList
 
 class DashboardActivity : BasicLayoutActivity() {
 
+    private var tripStarted: Boolean = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var tripService: TripService
     protected lateinit var locations : ArrayList<Location>;
@@ -33,16 +34,27 @@ class DashboardActivity : BasicLayoutActivity() {
         textMessage = findViewById(R.id.message)
         navView.selectedItemId = R.id.navigation_dashboard
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-        val startButton: Button = findViewById(R.id.startButton)
-        startButton.setOnClickListener(onStartButtonSelectedListener)
-        val stopButton: Button = findViewById(R.id.stopButton)
-        stopButton.setOnClickListener(onStopButtonSelectedListener)
+        val toggleButton: ToggleButton = findViewById(R.id.toggleButton)
+        toggleButton.setOnClickListener(onStartButtonSelectedListener)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         tripService = TripService(this)
     }
 
     protected val onStartButtonSelectedListener = View.OnClickListener {
+        if(!tripStarted)
+        {
+            startTrip()
+        }
+        else
+        {
+            stopTrip()
+        }
+        tripStarted = !tripStarted
+
+    }
+
+    protected fun startTrip() {
         locations = ArrayList();
         locationCallback = MyLocationCallback(this.locations, this.distanceCovered)
         try {
@@ -51,7 +63,6 @@ class DashboardActivity : BasicLayoutActivity() {
                 fastestInterval = 5000
                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             }
-
             fusedLocationClient.requestLocationUpdates(locationRequest,
                 locationCallback,
                 Looper.getMainLooper())
@@ -59,12 +70,12 @@ class DashboardActivity : BasicLayoutActivity() {
         catch(e : SecurityException ) {
             //TO-DO handle lack of permissions
         }
-
     }
 
-    protected val onStopButtonSelectedListener = View.OnClickListener {
+    protected fun stopTrip() {
         tripService.save(generateTrip())
     }
+
 
 
     protected fun generateTrip(): TripModel {
