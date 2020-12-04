@@ -35,11 +35,13 @@
             android:id="@+id/toggleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:checked="false"
             android:text="ToggleButton"
             android:textOff="Start"
             android:textOn="Stop"
-            tools:layout_editor_absoluteX="98dp"
-            tools:layout_editor_absoluteY="16dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/message"
+            app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

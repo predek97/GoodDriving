@@ -1,16 +1,21 @@
 package com.example.gooddriving
 
-import android.R.attr.path
+import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
 import com.example.gooddriving.db.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.coroutines.GlobalScope
@@ -72,6 +77,7 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
 
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.tripMap) as? SupportMapFragment
+
         mapFragment?.getMapAsync(this)
 
     }
@@ -96,16 +102,6 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
 
 
     override fun onMapReady(googleMap: GoogleMap?) {
-        /*
-        googleMap?.apply {
-            val sydney = LatLng(54.6, 18.29)
-            addMarker(
-                MarkerOptions()
-                    .position(sydney)
-                    .title("Marker in Wejherowo")
-            )
-        }
-        */
         var polylineOptions = PolylineOptions()
         polylineOptions.clickable(true)
 
@@ -137,13 +133,57 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
                     MarkerOptions()
                         .position(LatLng(vio.latitude, vio.longitude))
                         .title("Violation " + (i+1).toString())
+                        .snippet("Speed: " + vio.speed.toString() + " km/h\nLateral G-force: " + vio.lateralGForce.toString() + " g\nLinear G-force: " + vio.linearGForce.toString() + " g")
                 )
             }
         }
+        val infoWindowAdapter = MyInfoWindowAdapter(this)
+        googleMap?.setInfoWindowAdapter(infoWindowAdapter)
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    class MyInfoWindowAdapter(c: Context) : GoogleMap.InfoWindowAdapter {
+        val context = c
+        override fun getInfoContents(p0: Marker?): View? {
+            return null
+        }
+
+        override fun getInfoWindow(p0: Marker?): View {
+            val info = LinearLayout(context)
+            info.orientation = LinearLayout.VERTICAL
+
+            val title = TextView(context)
+            title.setTextColor(Color.BLACK)
+            title.gravity = Gravity.CENTER
+            title.setTypeface(null, Typeface.BOLD)
+            title.setText(p0?.getTitle())
+
+            val snippet = TextView(context)
+            if (p0?.snippet == null){
+
+            }
+            else{
+                snippet.setBackgroundColor(Color.YELLOW)
+            }
+            snippet.gravity = Gravity.CENTER
+            snippet.setTextColor(Color.GRAY)
+            snippet.setText(p0?.getSnippet())
+
+            if (p0?.title!!.contains("Violation")){
+                title.setBackgroundColor(Color.YELLOW)
+            }
+            else{
+                title.setBackgroundColor(Color.WHITE)
+            }
+            info.addView(title)
+            info.addView(snippet)
+
+            return info
+        }
+
     }
 
 }
