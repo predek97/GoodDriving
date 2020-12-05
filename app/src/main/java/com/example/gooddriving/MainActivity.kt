@@ -12,8 +12,7 @@ class MainActivity : BasicLayoutActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-
-        textMessage = findViewById(R.id.message)
+        this.title = "Home"
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 }

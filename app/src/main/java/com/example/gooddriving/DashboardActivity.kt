@@ -10,7 +10,6 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
-import android.widget.TextView
 import android.widget.ToggleButton
 import com.example.gooddriving.db.Violation
 import com.google.android.gms.location.*
@@ -43,7 +42,7 @@ class DashboardActivity : BasicLayoutActivity() {
         setContentView(R.layout.activity_dashboard)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        textMessage = findViewById(R.id.message)
+        textMessage = findViewById(R.id.startStopMessage)
         navView.selectedItemId = R.id.navigation_dashboard
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         val toggleButton: ToggleButton = findViewById(R.id.toggleButton)
