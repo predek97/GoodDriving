@@ -16,4 +16,20 @@
     <string name="my_image_description">Car trip info</string>
     <string name="trip_button_text">More</string>
     <string name="default_text">Placeholder</string>
+    <string name="intro_header">Welcome to DriverGym!</string>
+    <string name="intro_1">To start recording a trip, go to Dashboard and hit the Start button.</string>
+    <string name="intro_2">When recording a trip, keep the phone screen facing the back of the car, i.e. in a phone mount.</string>
+    <string name="intro_3">To stop recording, hit the Stop button in Dashboard.</string>
+    <string name="intro_4">To view all your recorded trips, go to Trips.</string>
+    <string name="intro_5">To see detailed statistics of your recorded trips, hit the More button while browsing through your trips.</string>
+    <string name="intro_footer">Have fun and enjoy!</string>
+    <string name="grade_name">Grade</string>
+    <string name="date_name">Date of trip</string>
+    <string name="duration_name">Duration of trip</string>
+    <string name="distance_name">Distance covered</string>
+    <string name="avg_speed_name">Average speed</string>
+    <string name="max_speed_name">Maximum speed</string>
+    <string name="intro">intro</string>
+    <string name="trip_start">Click start to record a trip</string>
+    <string name="trip_stop">Click stop to stop recording a trip</string>
 </resources>

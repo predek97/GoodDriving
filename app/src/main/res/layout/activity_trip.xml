@@ -55,7 +55,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Ocena" />
+                        android:text="@string/grade_name" />
 
                 <TextView
                         android:id="@+id/tripRating"
@@ -75,7 +75,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Data podróży" />
+                        android:text="@string/date_name" />
 
                 <TextView
                         android:id="@+id/tripDate"
@@ -96,7 +96,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Czas podróży" />
+                        android:text="@string/duration_name" />
 
                 <TextView
                         android:id="@+id/tripDuration"
@@ -117,7 +117,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Przejechany dystans" />
+                        android:text="@string/distance_name" />
 
                 <TextView
                         android:id="@+id/tripDistance"
@@ -138,7 +138,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Srednia prędkość" />
+                        android:text="@string/avg_speed_name" />
 
                 <TextView
                         android:id="@+id/tripAvgSpeed"
@@ -159,7 +159,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Maksymalna prędkość" />
+                        android:text="@string/max_speed_name" />
 
                 <TextView
                         android:id="@+id/tripMaxSpeed"

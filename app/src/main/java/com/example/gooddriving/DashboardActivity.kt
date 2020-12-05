@@ -6,7 +6,6 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
-import android.widget.Button
 import android.widget.ToggleButton
 import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -31,7 +30,7 @@ class DashboardActivity : BasicLayoutActivity() {
         setContentView(R.layout.activity_dashboard)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        textMessage = findViewById(R.id.message)
+        textMessage = findViewById(R.id.startStopMessage)
         navView.selectedItemId = R.id.navigation_dashboard
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         val toggleButton: ToggleButton = findViewById(R.id.toggleButton)
