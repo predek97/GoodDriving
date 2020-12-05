@@ -9,6 +9,8 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
+import android.view.WindowManager
+import android.widget.TextView
 import android.widget.ToggleButton
 import com.example.gooddriving.db.Violation
 import com.example.gooddriving.tracking.AccelerometerController
@@ -21,7 +23,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DashboardActivity : BasicLayoutActivity() {
+class DashboardActivity : BasicLayoutActivity(), LocationController.SpeedSubscriber {
 
     private var tripStarted: Boolean = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -29,24 +31,29 @@ class DashboardActivity : BasicLayoutActivity() {
     protected lateinit var locations : ArrayList<Location>
     protected lateinit var violations : ArrayList<Violation>
     protected var distanceCovered : Array<Double> = arrayOf(0.0)
-    protected lateinit var locationController: LocationCallback
+    protected lateinit var locationController: LocationController
     private lateinit var  accelerometerListener: SensorEventListener
 
 
     private lateinit var sensorManager: SensorManager
     private lateinit var sensor: Sensor
 
+    private lateinit var speedTextView: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
 
         textMessage = findViewById(R.id.startStopMessage)
         navView.selectedItemId = R.id.navigation_dashboard
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         val toggleButton: ToggleButton = findViewById(R.id.toggleButton)
         toggleButton.setOnClickListener(onStartButtonSelectedListener)
+        speedTextView = findViewById(R.id.speedText)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         tripService = TripService(this)
@@ -71,11 +78,12 @@ class DashboardActivity : BasicLayoutActivity() {
         locations = ArrayList()
         violations = ArrayList()
         locationController = LocationController(this.locations, this.distanceCovered)
+        locationController.addSubscriber(this)
         accelerometerListener = AccelerometerController(this.locations, this.violations)
         try {
             val locationRequest = LocationRequest.create()?.apply {
-                interval = 10000
-                fastestInterval = 5000
+                interval = 2000
+                fastestInterval = 1000
                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             }
             fusedLocationClient.requestLocationUpdates(locationRequest,
@@ -84,7 +92,7 @@ class DashboardActivity : BasicLayoutActivity() {
             sensorManager.registerListener(accelerometerListener, sensor, SensorManager.SENSOR_DELAY_NORMAL)
         }
         catch(e : SecurityException ) {
-            //TO-DO handle lack of permissions
+            TODO("handle lack of permissions")
         }
     }
 
@@ -117,5 +125,9 @@ class DashboardActivity : BasicLayoutActivity() {
             tripIdFromDb = 0
         )
     }
-    
+
+    override fun notifyNewSpeed(newSpeed: Double) {
+        speedTextView.text = String.format("%.0f", newSpeed)
+    }
+
 }

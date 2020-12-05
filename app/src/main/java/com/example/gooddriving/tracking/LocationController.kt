@@ -7,6 +7,16 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 
 class LocationController constructor(var locations : ArrayList<Location>, var distanceCovered : Array<Double>) : LocationCallback() {
+    private val subscribers = mutableListOf<SpeedSubscriber>()
+
+    interface SpeedSubscriber {
+        fun notifyNewSpeed(newSpeed : Double)
+    }
+
+    fun addSubscriber(newSubscriber: SpeedSubscriber) {
+        subscribers.add(newSubscriber)
+    }
+
     override fun onLocationResult(locationResult: LocationResult?) {
         super.onLocationResult(locationResult)
         locationResult ?: return
@@ -24,6 +34,9 @@ class LocationController constructor(var locations : ArrayList<Location>, var di
             val timeDifference = (currentLocation.time - lastLocation.time)/1000.0
             val speed = distance/timeDifference
             currentLocation.speed = speed.toFloat();
+            for(subscriber in subscribers) {
+                subscriber.notifyNewSpeed(speed)
+            }
         }
     }
 }
