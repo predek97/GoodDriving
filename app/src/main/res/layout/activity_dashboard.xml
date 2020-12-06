@@ -55,26 +55,16 @@
             android:id="@+id/speedText"
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:layout_marginTop="32dp"
             android:background="@drawable/circle"
             android:gravity="center"
             android:text="Speed"
             android:textSize="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/timerText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toggleButton" />
 
-    <TextView
-            android:id="@+id/timerText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Trip timer"
-            android:textSize="32dp"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/nav_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/speedText" />
+
 
     <TextView
             android:id="@+id/textView"
@@ -86,5 +76,87 @@
             android:text="km/h"
             app:layout_constraintStart_toStartOf="@+id/speedText"
             app:layout_constraintTop_toTopOf="@+id/speedText" />
+
+    <TextView
+            android:id="@+id/lateralGForceText"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="TextView"
+            android:gravity="center"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toTopOf="@+id/nav_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/linearGForceText"
+            app:layout_constraintTop_toBottomOf="@+id/speedText"
+            android:background="@drawable/small_circle"/>
+
+    <TextView
+            android:id="@+id/lateralGForce_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:layout_marginLeft="44dp"
+            android:layout_marginTop="64dp"
+            android:text="g"
+            app:layout_constraintStart_toStartOf="@id/lateralGForceText"
+            app:layout_constraintTop_toTopOf="@id/lateralGForceText"
+        />
+
+    <TextView
+            android:id="@+id/linearGForceText"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/small_circle"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toTopOf="@+id/nav_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/lateralGForceText"
+            app:layout_constraintTop_toBottomOf="@+id/speedText" />
+
+    <TextView
+            android:id="@+id/linearlGForce_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:layout_marginLeft="44dp"
+            android:layout_marginTop="64dp"
+            android:text="g"
+            app:layout_constraintStart_toStartOf="@id/linearGForceText"
+            app:layout_constraintTop_toTopOf="@id/linearGForceText"
+            />
+
+    <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current speed"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toTopOf="@+id/lateralGForceText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/speedText" />
+
+    <TextView
+            android:id="@+id/lateralGForceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lateral G-Force"
+            app:layout_constraintBottom_toTopOf="@+id/nav_view"
+            app:layout_constraintEnd_toStartOf="@+id/linearGForceTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lateralGForceText" />
+
+    <TextView
+            android:id="@+id/linearGForceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Linear G-Force"
+            app:layout_constraintStart_toEndOf="@id/lateralGForceTitle"
+            app:layout_constraintBottom_toTopOf="@+id/nav_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearGForceText" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
