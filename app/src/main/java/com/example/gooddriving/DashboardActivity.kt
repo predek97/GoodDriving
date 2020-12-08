@@ -42,6 +42,7 @@ class DashboardActivity : BasicLayoutActivity(),
     private lateinit var speedTextView: TextView
     private lateinit var lateralGForceTextView: TextView
     private lateinit var linearGForceTextView: TextView
+    private lateinit var toggleButton: ToggleButton
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,14 +52,14 @@ class DashboardActivity : BasicLayoutActivity(),
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
 
-        textMessage = findViewById(R.id.startStopMessage)
         navView.selectedItemId = R.id.navigation_dashboard
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-        val toggleButton: ToggleButton = findViewById(R.id.toggleButton)
+        toggleButton = findViewById(R.id.toggleButton)
         toggleButton.setOnClickListener(onStartButtonSelectedListener)
         speedTextView = findViewById(R.id.speedText)
         lateralGForceTextView = findViewById(R.id.lateralGForceText)
         linearGForceTextView = findViewById(R.id.linearGForceText)
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         tripService = TripService(this)
@@ -67,13 +68,16 @@ class DashboardActivity : BasicLayoutActivity(),
     }
 
     protected val onStartButtonSelectedListener = View.OnClickListener {
+
         if(!tripStarted)
         {
             startTrip()
+            toggleButton.setBackgroundResource(R.drawable.rounded_corner_button_red)
         }
         else
         {
             stopTrip()
+            toggleButton.setBackgroundResource(R.drawable.rounded_corner_button)
         }
         tripStarted = !tripStarted
 
