@@ -8,12 +8,24 @@ import com.example.gooddriving.db.Violation
 
 class AccelerometerController constructor(var locations : ArrayList<Location>, var violations : ArrayList<Violation>) :
     SensorEventListener {
+    private val subscribers = mutableListOf<AccelerationSubscriber>()
+
+    interface AccelerationSubscriber {
+        fun notifyNewAccelerations(newAccelerations : Pair<Double, Double>)
+    }
+
+    fun addSubscriber(newSubscriber: AccelerationSubscriber) {
+        subscribers.add(newSubscriber)
+    }
     override fun onAccuracyChanged(sensor: Sensor, acc: Int) {}
     override fun onSensorChanged(event: SensorEvent) {
         val x = event.values[0]
         val y = event.values[1]
         val z = event.values[2]
         val accelerationAxes = Triple(x, y, z)
+        for(subscriber in subscribers) {
+            subscriber.notifyNewAccelerations(Pair(z.toDouble(), x.toDouble()))
+        }
         if(!violationContinous && checkViolationConditions(accelerationAxes)) {
             createViolation(z, x)
         }
@@ -34,13 +46,14 @@ class AccelerometerController constructor(var locations : ArrayList<Location>, v
         else if(!checkViolationConditions(accelerationAxes) && violationContinous) {
             violationContinous = false
         }
+
     }
     protected fun createViolation(linearGForce : Float, lateralGForce : Float) {
         val lastLocation = locations.last()
         var violation = Violation(
             speed = lastLocation.speed.toDouble(),
-            lateralGForce = linearGForce.toDouble(),
-            linearGForce = lateralGForce.toDouble(),
+            lateralGForce = lateralGForce.toDouble(),
+            linearGForce = linearGForce.toDouble(),
             latitude = lastLocation.latitude,
             longitude = lastLocation.longitude,
             timestamp = lastLocation.time,

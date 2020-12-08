@@ -81,14 +81,14 @@
             android:id="@+id/lateralGForceText"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:text="TextView"
+            android:background="@drawable/small_circle"
             android:gravity="center"
+            android:text="0"
             android:textSize="18dp"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/linearGForceText"
-            app:layout_constraintTop_toBottomOf="@+id/speedText"
-            android:background="@drawable/small_circle"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/speedText" />
 
     <TextView
             android:id="@+id/lateralGForce_unit"
@@ -108,7 +108,7 @@
             android:layout_height="100dp"
             android:background="@drawable/small_circle"
             android:gravity="center"
-            android:text="TextView"
+            android:text="0"
             android:textSize="18dp"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintEnd_toEndOf="parent"

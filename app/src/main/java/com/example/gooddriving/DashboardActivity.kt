@@ -23,7 +23,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DashboardActivity : BasicLayoutActivity(), LocationController.SpeedSubscriber {
+class DashboardActivity : BasicLayoutActivity(),
+    LocationController.SpeedSubscriber, AccelerometerController.AccelerationSubscriber {
 
     private var tripStarted: Boolean = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -32,13 +33,15 @@ class DashboardActivity : BasicLayoutActivity(), LocationController.SpeedSubscri
     protected lateinit var violations : ArrayList<Violation>
     protected var distanceCovered : Array<Double> = arrayOf(0.0)
     protected lateinit var locationController: LocationController
-    private lateinit var  accelerometerListener: SensorEventListener
+    private lateinit var  accelerometerListener: AccelerometerController
 
 
     private lateinit var sensorManager: SensorManager
     private lateinit var sensor: Sensor
 
     private lateinit var speedTextView: TextView
+    private lateinit var lateralGForceTextView: TextView
+    private lateinit var linearGForceTextView: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +57,8 @@ class DashboardActivity : BasicLayoutActivity(), LocationController.SpeedSubscri
         val toggleButton: ToggleButton = findViewById(R.id.toggleButton)
         toggleButton.setOnClickListener(onStartButtonSelectedListener)
         speedTextView = findViewById(R.id.speedText)
+        lateralGForceTextView = findViewById(R.id.lateralGForceText)
+        linearGForceTextView = findViewById(R.id.linearGForceText)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         tripService = TripService(this)
@@ -80,6 +85,7 @@ class DashboardActivity : BasicLayoutActivity(), LocationController.SpeedSubscri
         locationController = LocationController(this.locations, this.distanceCovered)
         locationController.addSubscriber(this)
         accelerometerListener = AccelerometerController(this.locations, this.violations)
+        accelerometerListener.addSubscriber(this)
         try {
             val locationRequest = LocationRequest.create()?.apply {
                 interval = 2000
@@ -128,6 +134,11 @@ class DashboardActivity : BasicLayoutActivity(), LocationController.SpeedSubscri
 
     override fun notifyNewSpeed(newSpeed: Double) {
         speedTextView.text = String.format("%.0f", newSpeed)
+    }
+
+    override fun notifyNewAccelerations(newAccelerations: Pair<Double, Double>) {
+        linearGForceTextView.text = String.format("%.2f", newAccelerations.first)
+        lateralGForceTextView.text = String.format("%.2f", newAccelerations.second)
     }
 
 }
