@@ -65,10 +65,10 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
 
         findViewById<TextView>(R.id.tripRating).text = tripToDisplay!!.grade.toString()
         findViewById<TextView>(R.id.tripDate).text = tripToDisplay!!.dateOfTrip
-        findViewById<TextView>(R.id.tripDistance).text = tripToDisplay!!.distanceCovered.toString() + " km"
+        findViewById<TextView>(R.id.tripDistance).text = String.format("%.1f", tripToDisplay!!.distanceCovered/1000) + " km"
         findViewById<TextView>(R.id.tripDuration).text = tripToDisplay!!.timeElapsedConverted.toString(DurationUnit.MINUTES)
-        findViewById<TextView>(R.id.tripAvgSpeed).text = tripToDisplay!!.avgSpeed.toString() + " km/h"
-        findViewById<TextView>(R.id.tripMaxSpeed).text = tripToDisplay!!.maxSpeed.toString() + " km/h"
+        findViewById<TextView>(R.id.tripAvgSpeed).text = String.format("%.1f", tripToDisplay!!.avgSpeed) + " km/h"
+        findViewById<TextView>(R.id.tripMaxSpeed).text = String.format("%.1f", tripToDisplay!!.maxSpeed) + " km/h"
 
 
         if (getString(R.string.google_maps_key).isEmpty()) {
