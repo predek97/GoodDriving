@@ -63,7 +63,7 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
             task.await()
         }
 
-        findViewById<TextView>(R.id.tripRating).text = tripToDisplay!!.grade.toString()
+        findViewById<TextView>(R.id.tripRating).text = "10.0"//tripToDisplay!!.grade.toString()
         findViewById<TextView>(R.id.tripDate).text = tripToDisplay!!.dateOfTrip
         findViewById<TextView>(R.id.tripDistance).text = String.format("%.1f", tripToDisplay!!.distanceCovered/1000) + " km"
         findViewById<TextView>(R.id.tripDuration).text = tripToDisplay!!.timeElapsedConverted.toString(DurationUnit.MINUTES)
@@ -133,7 +133,7 @@ class TripActivity : BasicLayoutActivity(), OnMapReadyCallback {
                     MarkerOptions()
                         .position(LatLng(vio.latitude, vio.longitude))
                         .title("Violation " + (i+1).toString())
-                        .snippet("Speed: " + vio.speed.toString() + " km/h\nLateral G-force: " + vio.lateralGForce.toString() + " g\nLinear G-force: " + vio.linearGForce.toString() + " g")
+                        .snippet("Speed: " + String.format("%.1f", vio.speed) + " km/h\nLateral G-force: " + String.format("%.1f", vio.lateralGForce) + " g\nLinear G-force: " + String.format("%.1f", vio.linearGForce) + " g")
                 )
             }
         }
