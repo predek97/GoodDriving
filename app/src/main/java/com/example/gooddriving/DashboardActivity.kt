@@ -137,12 +137,12 @@ class DashboardActivity : BasicLayoutActivity(),
     }
 
     override fun notifyNewSpeed(newSpeed: Double) {
-        speedTextView.text = String.format("%.0f", newSpeed)
+        speedTextView.text = String.format("%.0f", newSpeed * 3.6) // m/s to km/h
     }
 
     override fun notifyNewAccelerations(newAccelerations: Pair<Double, Double>) {
-        linearGForceTextView.text = String.format("%.2f", newAccelerations.first)
-        lateralGForceTextView.text = String.format("%.2f", newAccelerations.second)
+        linearGForceTextView.text = String.format("%.2f", newAccelerations.first / SensorManager.GRAVITY_EARTH)
+        lateralGForceTextView.text = String.format("%.2f", newAccelerations.second / SensorManager.GRAVITY_EARTH)
     }
 
 }
